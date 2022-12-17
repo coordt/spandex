@@ -53,10 +53,7 @@ def install_pkg(package, version=None):
 def install_pkg_local(package, version):
     pip = "pip -q install"
     extra_idx = "--extra-index-url=http://opensource.washingtontimes.com/simple/"
-    if version is None:
-        pkg = package
-    else:
-        pkg = "%s==%s" % (package, version)
+    pkg = package if version is None else f"{package}=={version}"
     cmd = [pip, extra_idx, pkg]
     local(" ".join(cmd))
 
@@ -64,7 +61,7 @@ def pkg_version(package):
     """
     Print out the version installed for a particular package
     """
-    run("%sbin/pip freeze | grep %s" % (venv, package))
+    run(f"{venv}bin/pip freeze | grep {package}")
 
 def update_reqs():
     """
@@ -73,7 +70,7 @@ def update_reqs():
     """
     
     req_path = join_path(VIRTUALENC_ROOT, CURRENT_SITE, REQUIREMENTS_PATH)
-    run('%s/bin/pip install -E %s -r %s' % (venv, venv, req_path))
+    run(f'{venv}/bin/pip install -E {venv} -r {req_path}')
 
 def reload():
     """
@@ -81,7 +78,7 @@ def reload():
     """
     global site_path,wsgi_path
     with cd(site_path):
-        run('touch %s' % wsgi_path)
+        run(f'touch {wsgi_path}')
 
 def update():
     """
